@@ -31,6 +31,8 @@ export default function AddServiceForm(props){
             setaddedProducts(response.data.products);
         }else if (response.status === 401){
             props.logoutFn();
+        }else {
+            props.showNotification("error", "fetch products: "+response.message);
         }
     }
 
@@ -44,6 +46,8 @@ export default function AddServiceForm(props){
             setAddedServices(response.data.services);
         }else if (response.status === 401){
             props.logoutFn();
+        }else {
+            props.showNotification("error", "fetch services: "+response.message);
         }
     }
 
@@ -67,11 +71,13 @@ export default function AddServiceForm(props){
         console.log("save services form response", response);
         if (response.status === 200){
             console.log("Add service success", response.message);
+            props.showNotification("success", "Add service success");
         }else {
             setloginErr(response.message);
             setTimeout(() => {
                 setloginErr("");
             }, 2000);
+            props.showNotification("error", "Error: "+response.message);
         }
 
         getServices();
@@ -101,7 +107,7 @@ export default function AddServiceForm(props){
                     {
                         addedServices && addedServices.map(item => {
                             return (
-                                <tr className='table-row'>
+                                <tr key={item.code} className='table-row'>
                                     <TableDataCell data={item.code} />
                                     <TableDataCell data={item.name} />
                                     <TableDataCell data={item.description} />

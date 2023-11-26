@@ -4,7 +4,7 @@ import StatsCard from "./StatsCard.jsx";
 
 
 
-export default function ({token, logoutFn}) {
+export default function ({token, logoutFn, showNotification}) {
 
     const [addedProducts, setaddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
@@ -19,6 +19,8 @@ export default function ({token, logoutFn}) {
             setaddedProducts(response.data.products);
         }else if (response.status === 401){
             logoutFn();
+        }else{
+            showNotification("error", "fetch products: "+response.message);
         }
     }
 
@@ -32,6 +34,8 @@ export default function ({token, logoutFn}) {
             setAddedServices(response.data.services);
         }else if (response.status === 401){
             logoutFn();
+        }else{
+            showNotification("error", "fetch services: "+response.message);
         }
     }
 

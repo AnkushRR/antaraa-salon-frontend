@@ -4,7 +4,7 @@ import KeyVal from "../components/KeyVal.jsx";
 import CenterMainCard from "../components/CenterMainCard.jsx";
 import {getRequest} from "../utils/apiHandler.js";
 
-export default function ({token, logoutFn}) {
+export default function ({token, logoutFn, notifications, showNotification}) {
 
     const [admin, setAdmin] = useState({});
 
@@ -17,6 +17,8 @@ export default function ({token, logoutFn}) {
             setAdmin(response.data.admin);
         }else if (response.status === 401){
             logoutFn();
+        }else {
+            showNotification("error", "fetch profile: "+response.message);
         }
     }
 
@@ -27,14 +29,15 @@ export default function ({token, logoutFn}) {
     const navLinks = [
         { name: "Home", link: "/"},
         { name: "Services", link: "/services"},
-        { name: "Products", link: "/products"}
+        { name: "Products", link: "/products"},
+        { name: "Employees", link: "/employees"}
     ];
 
     console.log(admin);
 
     return (
         <div className=''>
-            <Header currentPageTitle="My Profile" logoutFn={logoutFn} otherLinks={navLinks} />
+            <Header currentPageTitle="My Profile" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
 
             {admin && admin.userName &&
                 <CenterMainCard title={"My Profile"} children={

@@ -31,6 +31,8 @@ export default function (props){
             setaddedProducts(response.data.products);
         }else if (response.status === 401){
             props.logoutFn();
+        }else {
+            props.showNotification("error", "fetch Products: "+response.message);
         }
     }
 
@@ -44,16 +46,19 @@ export default function (props){
             setAddedServices(response.data.services);
         }else if (response.status === 401){
             props.logoutFn();
+        }else {
+            props.showNotification("error", "fetch Services: "+response.message);
         }
     }
 
     useEffect(() => {
+        console.log(addedServices);
         getProducts();
         getServices();
     }, []);
 
 
-    async function addServiceHandler(){
+    async function addProductHandler(){
         const response = await postRequest('/add-product', {}, {token: props.token}, {
             name,
             code,
@@ -67,11 +72,13 @@ export default function (props){
         console.log("save products form response", response);
         if (response.status === 200){
             console.log("Add products success", response.message);
+            props.showNotification("success", "Add product success");
         }else {
             setloginErr(response.message);
             setTimeout(() => {
                 setloginErr("");
             }, 2000);
+            props.showNotification("error", "Error: "+response.message);
         }
 
         getProducts();
@@ -102,7 +109,7 @@ export default function (props){
                     {
                         addedProducts && addedProducts.map(item => {
                             return (
-                                <tr className='table-row'>
+                                <tr key={item.code} className='table-row'>
                                     <TableDataCell data={item.code} />
                                     <TableDataCell data={item.name} />
                                     <TableDataCell data={item.description} />
@@ -139,7 +146,7 @@ export default function (props){
                 <div className='flex flex-col items-center justify-between mt-3'>
                     <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
                 px-4 rounded focus:outline-none focus:shadow-outline' type="submit"
-                            onClick={() => {addServiceHandler();}}>{loading ? "Processing.." : "Submit"}</button>
+                            onClick={() => {addProductHandler();}}>{loading ? "Processing.." : "Submit"}</button>
 
                     <small className='inline-block align-baseline font-bold text-sm text-red-500 mt-1'>
                         {loginErr}</small><br></br>

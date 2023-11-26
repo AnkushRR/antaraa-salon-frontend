@@ -1,12 +1,10 @@
 import React, {useState} from 'react';
-import { postRequest } from '../utils/apiHandler';
+import {postRequest} from '../utils/apiHandler';
 import Home from "./home.jsx";
-import antaraa_logo from "../assets/antaraa_logo.jpeg";
-import NavButton from "../components/NavButton.jsx";
 import Header from "../components/Header.jsx";
 
 
-export default function Login({setToken, setAdmin}) {
+export default function Login({setToken, setAdmin, notifications, showNotification}) {
     
     const [email, setemail] = useState();
     const [password, setPassword] = useState();
@@ -38,6 +36,7 @@ export default function Login({setToken, setAdmin}) {
             setTimeout(() => {
                 setLoginErr("");
               }, 10000);
+            showNotification("error", data.message);
         }
 
         setLoading(false);
@@ -46,7 +45,7 @@ export default function Login({setToken, setAdmin}) {
 
   return(
     <div className='space-y-16'>
-        <Header currentPageTitle="Login" logoutFn={null} otherLinks={[]} />
+        <Header currentPageTitle="Login" logoutFn={null} otherLinks={[]} notifications={notifications} />
 
         <div className='p-3 bg-white shadow-lg rounded px-8 pt-6 pb-5 mb-4 max-w-sm mx-3 sm:mx-auto'>
             <p className='text-2xl font-semibold text-center text-slate-600 font-serif'>Admin Login</p>
