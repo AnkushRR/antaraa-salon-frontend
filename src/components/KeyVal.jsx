@@ -17,7 +17,7 @@ export default function ({obj}) {
                     return (
                         <tr key={index} className=''>
                             <TableColHeader title={key} />
-                            <TableDataCell data={obj[key]} widthMax={true}/>
+                            <TableDataCell data={obj[key]} widthMax={true} key={key}/>
                         </tr>
                     )
                 })

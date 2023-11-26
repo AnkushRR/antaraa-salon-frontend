@@ -38,7 +38,7 @@ export default function ({token, logoutFn}) {
 
             {admin && admin.userName &&
                 <CenterMainCard title={"My Profile"} children={
-                    <div className='mx-0 max-w-sm'>
+                    <div className='mx-0'>
                         <KeyVal obj={admin} />
                     </div>
                 } />
