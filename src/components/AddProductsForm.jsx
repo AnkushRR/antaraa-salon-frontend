@@ -79,7 +79,7 @@ export default function (props){
 
     return (
         <div className='flex flex-wrap w-screen justify-center'>
-            {addedServices.length > 0 &&
+            {addedProducts.length > 0 &&
             <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 max-w-full overflow-auto'>
                 <FormTitle text='Added Products:'/>
                 <table className='border text-center'>
