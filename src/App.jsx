@@ -7,11 +7,33 @@ import Services from "./pages/services.jsx";
 import React, {useState} from "react";
 import Products from "./pages/products.jsx";
 import Profile from "./pages/profile.jsx";
+import Employees from "./pages/employees.jsx";
 
 function App() {
 
     const [token, setToken] = useState("");
     const [admin, setAdmin] = useState(null);
+    // notifications
+    const [notifications, setNotifications] = useState([]);
+
+    function showNotification(type, message, clearDelay=3000){
+        const id = Date.now();
+        setNotifications(prevState => {
+            if (!prevState)
+                return [{id, type, message}];
+            return [...prevState, {id, type, message}]
+        });
+
+        setTimeout(() => {
+            setNotifications(prevState => {
+                if (prevState && prevState.length > 0){
+                    return prevState.filter(item => item.id !== id);
+                }else {
+                    return prevState;
+                }
+            })
+        }, clearDelay);
+    }
 
     const tok = localStorage.getItem("token");
     if(!token) {
@@ -26,6 +48,7 @@ function App() {
         //console.log("returned home");
     }
 
+
     function logout(){
         localStorage.clear();
         setToken(null);
@@ -35,12 +58,45 @@ function App() {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home logoutFn={logout} token={token} admin={admin}/>} />
-          <Route path="/login" element={<Login setToken={setToken} setAdmin={setAdmin} />} />
-          <Route path="/services" element={<Services logoutFn={logout} token={token}/> } />
-          <Route path="/products" element={<Products logoutFn={logout} token={token}/> } />
-          <Route path="/profile" element={<Profile logoutFn={logout} token={token} admin={admin} /> } />
-          <Route path="*" element={<NoPage />} />
+
+          <Route path='/' element={
+              <Home logoutFn={logout} token={token} admin={admin}
+                    notifications={notifications} showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="/login" element={
+              <Login setToken={setToken} setAdmin={setAdmin} notifications={notifications}
+                     showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="/services" element={
+              <Services logoutFn={logout} token={token}
+                        notifications={notifications} showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="/products" element={
+              <Products logoutFn={logout} token={token}
+                        notifications={notifications} showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="/employees" element={
+              <Employees token={token} logoutFn={logout}
+                         notifications={notifications} showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="/profile" element={
+              <Profile logoutFn={logout} token={token} admin={admin}
+                       notifications={notifications} showNotification={showNotification}
+              /> }
+          />
+
+          <Route path="*" element={ <NoPage /> } />
+
         </Routes>
       </BrowserRouter>
   )

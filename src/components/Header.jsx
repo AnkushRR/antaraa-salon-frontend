@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 import antaraa_logo from "../assets/antaraa_logo.jpeg";
 import NavButton from "./NavButton.jsx";
+import Notification from "./Notification.jsx";
 
-export default function ({currentPageTitle, logoutFn, otherLinks}){
+
+export default function ({currentPageTitle, logoutFn, otherLinks, notifications=[]}){
     const [title, setTitle] = useState("Antaraa Admin Dashboard");
 
     return (
@@ -23,6 +25,17 @@ export default function ({currentPageTitle, logoutFn, otherLinks}){
                     <NavButton type="logout" path='' text='Log Out' callback={logoutFn} />
                 }
             </div>
+            {
+                notifications && notifications.length > 0 &&
+                <div key="notifications bar" className='fixed right-3 sm:left-1/3 sm:right-1 p-2 top-16 flex flex-col space-y-1 w-fit'>
+                    {
+                        notifications && notifications.map(item => {
+                            return <Notification type={item.type} message={item.message} />
+                        })
+                    }
+                </div>
+            }
+
         </div>
     )
 }
