@@ -14,6 +14,9 @@ export default function (props){
     const [sellingPrice, setsellingPrice] = useState(0);
     const [addedProducts, setaddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
+    const [stock, setStock] = useState(1);
+    const [code, setCode] = useState(null);
+    const [isForSale, setIsForSale] = useState(true);
     const [loading, setloading] = useState(false);
     const [loginErr, setloginErr] = useState("");
 
@@ -53,10 +56,12 @@ export default function (props){
     async function addServiceHandler(){
         const response = await postRequest('/add-product', {}, {token: props.token}, {
             name,
+            code,
+            stock,
             description,
             unitCost,
             sellingPrice,
-            isForSale: true
+            isForSale
         });
 
         console.log("save products form response", response);
@@ -81,8 +86,11 @@ export default function (props){
                     <thead>
 
                         <tr className='table-row'>
+                            <TableColHeader title={"Code"} />
                             <TableColHeader title={"Name"} />
                             <TableColHeader title={"Description"} />
+                            <TableColHeader title={"Is For Sale"} />
+                            <TableColHeader title={"Stock"} />
                             <TableColHeader title={"Unit Cost"} />
                             <TableColHeader title={"Selling Price"} />
                             <TableColHeader title={"Service Sale Count"} />
@@ -95,8 +103,11 @@ export default function (props){
                         addedProducts && addedProducts.map(item => {
                             return (
                                 <tr className='table-row'>
+                                    <TableDataCell data={item.code} />
                                     <TableDataCell data={item.name} />
                                     <TableDataCell data={item.description} />
+                                    <TableDataCell data={item.isForSale ? "Yes" : "No"} />
+                                    <TableDataCell data={item.stock || 1} />
                                     <TableDataCell data={item.unitCost} />
                                     <TableDataCell data={item.sellingPrice} />
                                     <TableDataCell data={item.serviceSaleCount} />
@@ -112,6 +123,7 @@ export default function (props){
             }
             <div className='bg-white shadow-lg rounded px-8 pt-6 pb-1 mb-4 mt-5 sm:max-w-md max-w-sm'>
                 <FormTitle text='Add A Product:'/>
+                <FormInput label={"Product Code"} type={"text"} placeHolder={"Code"} onChangeCallback={setCode} />
                 <FormInput label="Name" type="text" placeHolder="Product Name" onChangeCallback={setName} />
                 <FormInput label="Description" type="text" placeHolder="Brief description"
                            onChangeCallback={setdescription} />
@@ -119,6 +131,10 @@ export default function (props){
                            onChangeCallback={setunitcost} />
                 <FormInput label="Selling Price" type="number" placeHolder="Selling Price in INR"
                            onChangeCallback={setsellingPrice} />
+
+                <FormInput label={"Stock Units"} type={"number"} placeHolder={"Stock Quantity"} onChangeCallback={setStock} />
+
+                <FormInput label={"Is For Sale"} type={"checkbox"} placeHolder={""} onChangeCallback={setIsForSale} valueState={isForSale} />
 
                 <div className='flex flex-col items-center justify-between mt-3'>
                     <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2

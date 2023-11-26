@@ -16,6 +16,7 @@ export default function AddServiceForm(props){
     const [productsIncluded, setproductsIncluded] = useState([]);
     const [addedProducts, setaddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
+    const [code, setCode] = useState(null);
     const [loading, setloading] = useState(false);
     const [loginErr, setloginErr] = useState("");
 
@@ -55,6 +56,7 @@ export default function AddServiceForm(props){
     async function addServiceHandler(){
         const response = await postRequest('/add-service', {}, {token: props.token}, {
             name,
+            code,
             description,
             unitCost,
             sellingPrice,
@@ -83,6 +85,7 @@ export default function AddServiceForm(props){
                 <table className='border text-center'>
                     <thead>
                         <tr className='table-row'>
+                            <TableColHeader title={"Code"} />
                             <TableColHeader title={"Name"} />
                             <TableColHeader title={"Description"} />
                             <TableColHeader title={"Unit Cost"} />
@@ -99,6 +102,7 @@ export default function AddServiceForm(props){
                         addedServices && addedServices.map(item => {
                             return (
                                 <tr className='table-row'>
+                                    <TableDataCell data={item.code} />
                                     <TableDataCell data={item.name} />
                                     <TableDataCell data={item.description} />
                                     <TableDataCell data={item.unitCost} />
@@ -118,6 +122,7 @@ export default function AddServiceForm(props){
             }
             <div className='bg-white shadow-lg rounded px-8 pt-6 pb-1 mb-4 mt-5 sm:max-w-md max-w-sm'>
                 <FormTitle text='Add A Service:'/>
+                <FormInput label="Service Code" type="text" placeHolder="Service Code" onChangeCallback={setCode} />
                 <FormInput label="Name" type="text" placeHolder="Service Name" onChangeCallback={setName} />
                 <FormInput label="Description" type="text" placeHolder="Brief description"
                            onChangeCallback={setdescription} />
