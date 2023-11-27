@@ -27,7 +27,7 @@ export default function ({currentPageTitle, logoutFn, otherLinks, notifications=
             </div>
             {
                 notifications && notifications.length > 0 &&
-                <div key="notifications bar" className='fixed right-3 sm:left-1/3 sm:right-1 p-2 top-16 flex flex-col space-y-1 w-fit'>
+                <div key="notifications bar" className='fixed right-3 sm:right-1 p-2 top-16 flex flex-col space-y-1 w-fit'>
                     {
                         notifications && notifications.map(item => {
                             return <Notification type={item.type} message={item.message} />

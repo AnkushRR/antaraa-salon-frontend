@@ -74,40 +74,43 @@ export default function ({token, logoutFn, showNotification}){
                     <MaxWTableCard children={
                         <div className=''>
                             <FormTitle text='Employees:'/>
-                            <table className='border text-center'>
-                                <thead>
-                                <tr className='table-row'>
-                                    <TableColHeader title={"UserName"} />
-                                    <TableColHeader title={"Name"} />
-                                    <TableColHeader title={"Email"} />
-                                    <TableColHeader title={"Phone"} />
-                                    <TableColHeader title={"Department"} />
-                                    <TableColHeader title={"Role"} />
-                                    <TableColHeader title={"Last Login At"} />
-                                    <TableColHeader title={"Status"} />
-                                    <TableColHeader title={"Rating"} />
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    employees && employees.map(item => {
-                                        return (
-                                            <tr key={item._id} className='table-row'>
-                                                <TableDataCell data={item.userName} />
-                                                <TableDataCell data={item.firstName+" "+item.lastName} />
-                                                <TableDataCell data={item.email} />
-                                                <TableDataCell data={item.phone} />
-                                                <TableDataCell data={item.department} />
-                                                <TableDataCell data={item.role} />
-                                                <TableDataCell data={item.lastLoginAt} />
-                                                <TableDataCell data={item.status} />
-                                                <TableDataCell data={item.rating} />
-                                            </tr>
-                                        )
-                                    })
-                                }
-                                </tbody>
-                            </table>
+                            <div className='overflow-x-scroll'>
+                                <table className='border text-center overflow-x-scroll'>
+                                    <thead>
+                                    <tr className='table-row'>
+                                        <TableColHeader title={"UserName"} />
+                                        <TableColHeader title={"Name"} />
+                                        <TableColHeader title={"Email"} />
+                                        <TableColHeader title={"Phone"} />
+                                        <TableColHeader title={"Department"} />
+                                        <TableColHeader title={"Role"} />
+                                        <TableColHeader title={"Last Login At"} />
+                                        <TableColHeader title={"Status"} />
+                                        <TableColHeader title={"Rating"} />
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        employees && employees.map(item => {
+                                            return (
+                                                <tr key={item._id} className='table-row'>
+                                                    <TableDataCell data={item.userName} />
+                                                    <TableDataCell data={item.firstName+" "+item.lastName} />
+                                                    <TableDataCell data={item.email} />
+                                                    <TableDataCell data={item.phone} />
+                                                    <TableDataCell data={item.department} />
+                                                    <TableDataCell data={item.role} />
+                                                    <TableDataCell data={item.lastLoginAt} />
+                                                    <TableDataCell data={item.status} />
+                                                    <TableDataCell data={item.rating} />
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     } />
                 }

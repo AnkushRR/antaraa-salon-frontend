@@ -35,6 +35,7 @@ export default function Login({setToken, setAdmin, notifications, showNotificati
             //console.log("error state updated", data.message);
             setTimeout(() => {
                 setLoginErr("");
+                setLoading(false);
               }, 10000);
             showNotification("error", data.message);
         }

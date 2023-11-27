@@ -42,7 +42,7 @@ function App() {
             setToken(tok);
         }else{
             //console.log("redirect to login");
-            return <Login setToken={setToken} setAdmin={setAdmin}/>
+            return <Login setToken={setToken} setAdmin={setAdmin} notifications={notifications} showNotification={showNotification}/>
         }
     }else{
         //console.log("returned home");

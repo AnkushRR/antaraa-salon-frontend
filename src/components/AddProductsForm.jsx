@@ -87,13 +87,14 @@ export default function (props){
     return (
         <div className='flex flex-wrap w-screen justify-center'>
             {addedProducts.length > 0 &&
-            <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 max-w-full overflow-auto'>
+            <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
                 <FormTitle text='Added Products:'/>
-                <table className='border text-center'>
+                <div className='overflow-x-scroll'>
+                    <table className='border text-center'>
                     <thead>
 
                         <tr className='table-row'>
-                            <TableColHeader title={"Code"} />
+                            <TableColHeader title={"Category"} />
                             <TableColHeader title={"Name"} />
                             <TableColHeader title={"Description"} />
                             <TableColHeader title={"Is For Sale"} />
@@ -126,11 +127,12 @@ export default function (props){
                     }
                     </tbody>
                 </table>
+                </div>
             </div>
             }
             <div className='bg-white shadow-lg rounded px-8 pt-6 pb-1 mb-4 mt-5 sm:max-w-md max-w-sm'>
                 <FormTitle text='Add A Product:'/>
-                <FormInput label={"Product Code"} type={"text"} placeHolder={"Code"} onChangeCallback={setCode} />
+                <FormInput label={"Product Category"} type={"text"} placeHolder={"Category"} onChangeCallback={setCode} />
                 <FormInput label="Name" type="text" placeHolder="Product Name" onChangeCallback={setName} />
                 <FormInput label="Description" type="text" placeHolder="Brief description"
                            onChangeCallback={setdescription} />
