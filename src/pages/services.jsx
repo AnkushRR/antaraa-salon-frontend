@@ -5,10 +5,11 @@ import AddServiceForm from "../components/AddServiceForm.jsx";
 export default function ({logoutFn, token, notifications, showNotification}) {
 
     const navLinks = [
-        {name: "Home", link: "/"},
-        {name: "Products", link: "/products"},
+        { name: "Home", link: "/"},
+        { name: "Products", link: "/products"},
         { name: "Employees", link: "/employees"},
-        { name: "My Profile", link: "/profile"}
+        { name: "My Profile", link: "/profile"},
+        { name: "Sales", link: "/sales"}
     ]
 
     return (

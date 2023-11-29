@@ -53,7 +53,7 @@ export default function FormDynamicInput({label, selectList, selectedList, setSe
     return (
         <div className="my-2">
             <label className='block text-gray-700 text-sm font-bold mb-1'>
-                Product Category
+                {label} Category:
             </label>
             <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className='shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:shadow-outline mb-1' >
                 <option value={''}>All Categories</option>
@@ -65,7 +65,7 @@ export default function FormDynamicInput({label, selectList, selectedList, setSe
             </select>
 
             <label className='block text-gray-700 text-sm font-bold mb-1'>
-                {label}:
+                Add {label}:
             </label>
 
             <select disabled={categoryList.length === 0} value={defaultSelect} onChange={e => addItemToList(e.target.value)} className='shadow-sm appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
@@ -73,7 +73,7 @@ export default function FormDynamicInput({label, selectList, selectedList, setSe
                     categoryList && categoryList.length === 0 ?
                         "All Selected"
                     :
-                        "Select Product"
+                        `Select ${label}`
                 }</option>
                 {
                     categoryList.map(item =>
@@ -85,7 +85,7 @@ export default function FormDynamicInput({label, selectList, selectedList, setSe
             <div className='flex flex-row-reverse flex-nowrap mt-1'>
                 {
                     categoryList.length > 0 &&
-                    <div className='px-2 py-1 m-1 h-fit text-center bg-green-400 rounded text-white text-xs cursor-pointer' onClick={() => {
+                    <div className='px-2 py-1 m-1 h-fit text-center bg-green-500 rounded text-white text-xs cursor-pointer' onClick={() => {
                         for (const item of categoryList){
                             addItemToList(item.name);
                         }
@@ -93,7 +93,7 @@ export default function FormDynamicInput({label, selectList, selectedList, setSe
                 }
                 {
                     selectedList.length > 0 &&
-                    <div className='px-2 py-1 m-1 h-fit text-center bg-red-400 rounded text-white text-xs cursor-pointer' onClick={() => {
+                    <div className='px-2 py-1 m-1 h-fit text-center bg-red-500 rounded text-white text-xs cursor-pointer' onClick={() => {
                         for (const item of selectedList){
                             removeItemFromList(item);
                         }

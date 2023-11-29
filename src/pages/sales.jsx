@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header.jsx";
-import KeyVal from "../components/KeyVal.jsx";
-import CenterMainCard from "../components/CenterMainCard.jsx";
 import {getRequest} from "../utils/apiHandler.js";
+import AddEmployeesForm from "../components/AddEmployeesForm.jsx";
+import AddSalesForm from "../components/AddSalesForm.jsx";
 
 export default function ({token, logoutFn, notifications, showNotification}) {
 
@@ -18,7 +18,7 @@ export default function ({token, logoutFn, notifications, showNotification}) {
         }else if (response.status === 401){
             logoutFn();
         }else {
-            showNotification("error", "fetch profile: "+response.message);
+            showNotification("error", "Failed to get profile, "+response.message);
         }
     }
 
@@ -30,31 +30,15 @@ export default function ({token, logoutFn, notifications, showNotification}) {
         { name: "Home", link: "/"},
         { name: "Services", link: "/services"},
         { name: "Products", link: "/products"},
-        { name: "Employees", link: "/employees"},
-        { name: "Sales", link: "/sales"}
+        { name: "My Profile", link: "/profile"},
+        { name: "Employees", link: "/employees"}
     ];
-
-    console.log(admin);
 
     return (
         <div className=''>
-            <Header currentPageTitle="My Profile" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
+            <Header currentPageTitle="Sales" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
 
-            {admin && admin.userName &&
-                <CenterMainCard title={"My Profile"} children={
-                    <div className='mx-0'>
-                        <KeyVal obj={admin} />
-                    </div>
-                } />
-            }
-
-            {!admin &&
-                <div className='text-xl'>
-                    Fetching profile..
-                </div>
-            }
-
-
+            <AddSalesForm showNotification={showNotification} logoutFn={logoutFn} token={token} />
         </div>
     )
 }

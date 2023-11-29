@@ -140,7 +140,7 @@ export default function AddServiceForm(props){
                            onChangeCallback={setsellingPrice} />
                 <FormInput label="service Time" type="number" placeHolder="Service time in minutes"
                            onChangeCallback={setserviceTime} />
-                <FormDynamicInput label="Add Products" selectList={addedProducts}
+                <FormDynamicInput label="Products" selectList={addedProducts}
                                   selectedList={productsIncluded}  setSelectedList={setproductsIncluded}/>
                 <div className='flex flex-col items-center justify-between mt-3'>
                     <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2

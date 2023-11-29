@@ -8,7 +8,8 @@ export default function Home ({logoutFn, token, admin, notifications, showNotifi
         { name: "Services", link: "/services"},
         { name: "Products", link: "/products"},
         { name: "Employees", link: "/employees"},
-        { name: "My Profile", link: "/profile"}
+        { name: "My Profile", link: "/profile"},
+        { name: "Sales", link: "/sales"}
     ];
 
     return (

@@ -8,6 +8,7 @@ import React, {useState} from "react";
 import Products from "./pages/products.jsx";
 import Profile from "./pages/profile.jsx";
 import Employees from "./pages/employees.jsx";
+import Sales from "./pages/sales.jsx";
 
 function App() {
 
@@ -57,46 +58,49 @@ function App() {
 
   return (
       <BrowserRouter>
-        <Routes>
-
-          <Route path='/' element={
-              <Home logoutFn={logout} token={token} admin={admin}
-                    notifications={notifications} showNotification={showNotification}
-              /> }
-          />
-
-          <Route path="/login" element={
-              <Login setToken={setToken} setAdmin={setAdmin} notifications={notifications}
-                     showNotification={showNotification}
-              /> }
-          />
-
-          <Route path="/services" element={
-              <Services logoutFn={logout} token={token}
+          <Routes>
+              <Route path='/' element={
+                  <Home logoutFn={logout} token={token} admin={admin}
                         notifications={notifications} showNotification={showNotification}
-              /> }
-          />
+                  /> }
+              />
 
-          <Route path="/products" element={
-              <Products logoutFn={logout} token={token}
-                        notifications={notifications} showNotification={showNotification}
-              /> }
-          />
+              <Route path="/login" element={
+                  <Login setToken={setToken} setAdmin={setAdmin} notifications={notifications}
+                         showNotification={showNotification}
+                  /> }
+              />
 
-          <Route path="/employees" element={
-              <Employees token={token} logoutFn={logout}
-                         notifications={notifications} showNotification={showNotification}
-              /> }
-          />
+              <Route path="/services" element={
+                  <Services logoutFn={logout} token={token}
+                            notifications={notifications} showNotification={showNotification}
+                  /> }
+              />
 
-          <Route path="/profile" element={
-              <Profile logoutFn={logout} token={token} admin={admin}
-                       notifications={notifications} showNotification={showNotification}
-              /> }
-          />
+              <Route path="/products" element={
+                  <Products logoutFn={logout} token={token}
+                            notifications={notifications} showNotification={showNotification}
+                  /> }
+              />
 
+              <Route path="/employees" element={
+                  <Employees token={token} logoutFn={logout}
+                             notifications={notifications} showNotification={showNotification}
+                  /> }
+              />
+
+              <Route path="/profile" element={
+                  <Profile logoutFn={logout} token={token} admin={admin}
+                           notifications={notifications} showNotification={showNotification}
+                  /> }
+              />
+
+              <Route path='/sales' element={
+                  <Sales logoutFn={logout} token={token} notifications={notifications}
+                           showNotification={showNotification}
+                  /> }
+              />
           <Route path="*" element={ <NoPage /> } />
-
         </Routes>
       </BrowserRouter>
   )
