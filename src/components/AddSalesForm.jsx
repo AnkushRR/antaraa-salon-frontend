@@ -121,7 +121,7 @@ export default function ({token, logoutFn, showNotification}){
         setPhone("");
         setDob(null);
         setSelectedProducts([]);
-        setSelectedProducts([]);
+        setSelectedServices([]);
         setDiscountAmount(0);
         setPaidAmount(0);
     }
