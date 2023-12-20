@@ -9,7 +9,8 @@ export default function ({logoutFn, token, notifications, showNotification}) {
         { name: "Products", link: "/products"},
         { name: "Employees", link: "/employees"},
         { name: "My Profile", link: "/profile"},
-        { name: "Sales", link: "/sales"}
+        { name: "Sales", link: "/sales"},
+        { name: "Attendances", link: '/attendances'}
     ]
 
     return (

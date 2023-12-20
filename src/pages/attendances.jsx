@@ -8,6 +8,7 @@ import Camera from "../components/Camera.jsx";
 export default function ({token, logoutFn, notifications, showNotification}) {
 
     const [admin, setAdmin] = useState({});
+    const [employees, setEmployees] = useState({});
 
     async function getProfile(){
         const response = await getRequest('profile', {}, {
@@ -23,9 +24,25 @@ export default function ({token, logoutFn, notifications, showNotification}) {
         }
     }
 
+    async function getEmployees() {
+        console.log(token);
+        const response = await getRequest('get-employees', {}, {
+            token: `${token}`
+        });
+
+        if (response.status === 200){
+            setEmployees(response.data.employees);
+        }else if (response.status === 401){
+            logoutFn();
+        }else {
+            showNotification("error", "error in fetching employees "+response.message);
+        }
+    }
+
     useEffect(() => {
         getProfile();
-    }, []);
+        getEmployees();
+    }, [token]);
 
     const navLinks = [
         { name: "Home", link: "/"},
@@ -33,25 +50,18 @@ export default function ({token, logoutFn, notifications, showNotification}) {
         { name: "Products", link: "/products"},
         { name: "Employees", link: "/employees"},
         { name: "Sales", link: "/sales"},
-        { name: "Attendances", link: '/attendances'}
+        { name: "My Profile", link: "/profile"}
     ];
 
     console.log(admin);
 
     return (
         <div className=''>
-            <Header currentPageTitle="My Profile" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
-
-            <CenterMainCard title={"Attendance"} children={
-                <div className='mx-0'>
-                    <Camera token={token} logoutFn={logoutFn} showNotification={showNotification} />
-                </div>
-            } />
+            <Header currentPageTitle="Attendances" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
 
             {admin && admin.userName &&
-                <CenterMainCard title={"My Profile"} children={
-                    <div className='mx-0'>
-                        <KeyVal obj={admin} />
+                <CenterMainCard title={"Attendance Dashboard"} children={
+                    <div className='w-full'>
                     </div>
                 } />
             }

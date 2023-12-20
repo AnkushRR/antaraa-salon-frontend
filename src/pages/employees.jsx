@@ -30,7 +30,8 @@ export default function ({token, logoutFn, notifications, showNotification}) {
         { name: "Services", link: "/services"},
         { name: "Products", link: "/products"},
         { name: "My Profile", link: "/profile"},
-        { name: "Sales", link: "/sales"}
+        { name: "Sales", link: "/sales"},
+        { name: "Attendances", link: '/attendances'}
     ];
 
     return (

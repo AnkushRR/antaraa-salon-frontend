@@ -6,6 +6,7 @@ import TableColHeader from "./TableColHeader.jsx";
 import TableDataCell from "./TableDataCell.jsx";
 import MaxWTableCard from "./MaxWTableCard.jsx";
 import FormCard from "./FormCard.jsx";
+import utcToIST from "../hooks/utcToIST.js";
 
 export default function ({token, logoutFn, showNotification}){
 
@@ -100,7 +101,7 @@ export default function ({token, logoutFn, showNotification}){
                                                     <TableDataCell data={item.phone} />
                                                     <TableDataCell data={item.department} />
                                                     <TableDataCell data={item.role} />
-                                                    <TableDataCell data={item.lastLoginAt} />
+                                                    <TableDataCell data={utcToIST(item.lastLoginAt)} />
                                                     <TableDataCell data={item.status} />
                                                     <TableDataCell data={item.rating} />
                                                 </tr>

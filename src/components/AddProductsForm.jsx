@@ -5,6 +5,8 @@ import FormDynamicInput from "./FormDynamicInput.jsx";
 import {getRequest, postRequest} from "../utils/apiHandler.js";
 import TableColHeader from "./TableColHeader.jsx";
 import TableDataCell from "./TableDataCell.jsx";
+import EditToolTip from "./EditToolTip.jsx";
+import removeImg from "../assets/remove.png";
 
 export default function (props){
 
@@ -89,10 +91,10 @@ export default function (props){
             {addedProducts.length > 0 &&
             <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
                 <FormTitle text='Added Products:'/>
+                <EditToolTip />
                 <div className='overflow-x-scroll'>
                     <table className='border text-center'>
                     <thead>
-
                         <tr className='table-row'>
                             <TableColHeader title={"Category"} />
                             <TableColHeader title={"Name"} />
@@ -104,23 +106,111 @@ export default function (props){
                             <TableColHeader title={"Service Sale Count"} />
                             <TableColHeader title={"Direct Sale Count"} />
                             <TableColHeader title={"Rating"} />
+                            <TableColHeader title={"DEL"} />
                         </tr>
                     </thead>
                     <tbody>
                     {
                         addedProducts && addedProducts.map(item => {
                             return (
-                                <tr key={item.code} className='table-row'>
-                                    <TableDataCell data={item.code} />
-                                    <TableDataCell data={item.name} />
-                                    <TableDataCell data={item.description} />
-                                    <TableDataCell data={item.isForSale ? "Yes" : "No"} />
-                                    <TableDataCell data={item.stock || 1} />
-                                    <TableDataCell data={item.unitCost} />
-                                    <TableDataCell data={item.sellingPrice} />
-                                    <TableDataCell data={item.serviceSaleCount} />
-                                    <TableDataCell data={item.directSaleCount} />
-                                    <TableDataCell data={item.rating} />
+                                <tr key={item._id} className='table-row'>
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={'product'}
+                                        editable={true}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="code"
+                                        data={item.code} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="name"
+                                        data={item.name}
+                                        editable={true} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1={"description"}
+                                        editable={true}
+                                        data={item.description} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="isForSale"
+                                        data={item.isForSale ? "Yes" : "No"} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="stock"
+                                        data={item.stock || 1} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        editable={true}
+                                        type={"number"}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="unitCost"
+                                        data={item.unitCost} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        editable={true}
+                                        type={"number"}
+                                        collection={'product'}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="sellingPrice"
+                                        data={item.sellingPrice} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={"product"}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="serviceSaleCount"
+                                        data={item.serviceSaleCount} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={"product"}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="directSaleCount"
+                                        data={item.directSaleCount} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={"product"}
+                                        id={item._id}
+                                        showNotification={props.showNotification}
+                                        key1="rating"
+                                        data={item.rating} />
+                                    <TableDataCell
+                                        refreshFn={getProducts}
+                                        token={props.token}
+                                        collection={"product"}
+                                        id={item._id}
+                                        action={"delete"}
+                                        showNotification={props.showNotification}
+                                        data={
+                                        <img className={'w-10'} src={removeImg} alt={"delete"} />
+                                        } />
                                 </tr>
                             )
                         })

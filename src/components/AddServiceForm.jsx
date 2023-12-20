@@ -5,6 +5,9 @@ import FormDynamicInput from "./FormDynamicInput.jsx";
 import {getRequest, postRequest} from "../utils/apiHandler.js";
 import TableColHeader from "./TableColHeader.jsx";
 import TableDataCell from "./TableDataCell.jsx";
+import utcToIST from "../hooks/utcToIST.js";
+import EditToolTip from "./EditToolTip.jsx";
+import removeImg from "../assets/remove.png";
 
 export default function AddServiceForm(props){
 
@@ -16,6 +19,7 @@ export default function AddServiceForm(props){
     const [productsIncluded, setproductsIncluded] = useState([]);
     const [addedProducts, setaddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
+    const [allAdmins, setAllAdmins] = useState([]);
     const [code, setCode] = useState(null);
     const [loading, setloading] = useState(false);
     const [loginErr, setloginErr] = useState("");
@@ -51,9 +55,24 @@ export default function AddServiceForm(props){
         }
     }
 
+    async function getAdmins() {
+        const response = await getRequest('get-admins', {}, {
+            token: `${props.token}`
+        });
+
+        if (response.status === 200){
+            setAllAdmins(response.data.admins);
+        }else if (response.status === 401){
+            props.logoutFn();
+        }else {
+            props.showNotification("error", "fetch Sales: "+response.message);
+        }
+    }
+
     useEffect(() => {
         getProducts();
         getServices();
+        getAdmins();
     }, []);
 
 
@@ -88,6 +107,7 @@ export default function AddServiceForm(props){
             {addedServices.length > 0 &&
             <div className='bg-white shadow-lg mx-1 rounded px-4 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
                 <FormTitle text='Added Services:'/>
+                <EditToolTip />
                 <div className='overflow-x-scroll'>
                     <table className='border text-center'>
                         <thead>
@@ -102,6 +122,7 @@ export default function AddServiceForm(props){
                                 <TableColHeader title={"Last Sale At"} />
                                 <TableColHeader title={"Last Sale By"} />
                                 <TableColHeader title={"Rating"} />
+                                <TableColHeader title={"DEL"} />
                             </tr>
                         </thead>
                         <tbody>
@@ -109,16 +130,68 @@ export default function AddServiceForm(props){
                             addedServices && addedServices.map(item => {
                                 return (
                                     <tr key={item._id} className='table-row'>
-                                        <TableDataCell data={item.code} />
-                                        <TableDataCell data={item.name} />
-                                        <TableDataCell data={item.description} />
-                                        <TableDataCell data={item.unitCost} />
-                                        <TableDataCell data={item.sellingPrice} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={'service'}
+                                            id={item._id}
+                                            key1={'code'}
+                                            showNotification={props.showNotification}
+                                            editable={true}
+                                            data={item.code} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={'service'}
+                                            id={item._id}
+                                            key1={'name'}
+                                            showNotification={props.showNotification}
+                                            editable={true}
+                                            data={item.name} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={'service'}
+                                            id={item._id}
+                                            key1={'description'}
+                                            showNotification={props.showNotification}
+                                            editable={true}
+                                            data={item.description} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={'service'}
+                                            id={item._id}
+                                            key1={'unitCost'}
+                                            type={'number'}
+                                            showNotification={props.showNotification}
+                                            editable={true}
+                                            data={item.unitCost} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={'service'}
+                                            id={item._id}
+                                            key1={'sellingPr'}
+                                            type={'number'}
+                                            showNotification={props.showNotification}
+                                            editable={true}
+                                            data={item.sellingPrice} />
                                         <TableDataCell data={item.serviceTime} />
                                         <TableDataCell data={item.saleCount} />
-                                        <TableDataCell data={item.lastSaleAt || "null"} />
-                                        <TableDataCell data={item.lastSaleBy || "null"} />
+                                        <TableDataCell data={utcToIST(item.lastSaleAt)} />
+                                        <TableDataCell data={allAdmins?.find(item => item._id)?.email || "null"} />
                                         <TableDataCell data={item.rating || 0} />
+                                        <TableDataCell
+                                            refreshFn={getServices}
+                                            token={props.token}
+                                            collection={"service"}
+                                            id={item._id}
+                                            action={"delete"}
+                                            showNotification={props.showNotification}
+                                            data={
+                                                <img className={'w-10'} src={removeImg} alt={"delete"} />
+                                            } />
                                     </tr>
                                 )
                             })

@@ -9,6 +9,7 @@ import Products from "./pages/products.jsx";
 import Profile from "./pages/profile.jsx";
 import Employees from "./pages/employees.jsx";
 import Sales from "./pages/sales.jsx";
+import Attendances from "./pages/attendances.jsx";
 
 function App() {
 
@@ -100,7 +101,14 @@ function App() {
                            showNotification={showNotification}
                   /> }
               />
-          <Route path="*" element={ <NoPage /> } />
+
+              <Route path='/attendances' element={
+                  <Attendances logoutFn={logout} token={token} notifications={notifications}
+                               showNotification={showNotification}
+                  /> }
+              />
+
+              <Route path="*" element={ <NoPage /> } />
         </Routes>
       </BrowserRouter>
   )

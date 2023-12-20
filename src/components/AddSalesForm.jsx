@@ -8,17 +8,21 @@ import MaxWTableCard from "./MaxWTableCard.jsx";
 import FormCard from "./FormCard.jsx";
 import FormDynamicInput from "./FormDynamicInput.jsx";
 import products from "../pages/products.jsx";
+import {Link} from "react-router-dom";
 
 export default function ({token, logoutFn, showNotification}){
 
     const [sales, setSales] = useState([]);
     const [addedProducts, setAddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
+    const [saleDoneBy, setSaleDoneBy] = useState(null);
+    const [allAdmins, setAllAdmins] = useState([]);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
     const [dob, setDob] = useState(null);
     const [selectedServices, setSelectedServices] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
@@ -76,18 +80,42 @@ export default function ({token, logoutFn, showNotification}){
         }
     }
 
+    async function getAdmins() {
+        const response = await getRequest('get-admins', {}, {
+            token: `${token}`
+        });
+
+        if (response.status === 200){
+            setAllAdmins(response.data.admins);
+        }else if (response.status === 401){
+            logoutFn();
+        }else {
+            showNotification("error", "fetch Sales: "+response.message);
+        }
+    }
+
+    async function setAdminId(adminEmail){
+        console.log(adminEmail);
+        const a = allAdmins.find(item => item.email === adminEmail);
+        if (a){
+            setSaleDoneBy(a._id);
+            console.log("admin id", a._id);
+        }
+    }
+
     useEffect(() => {
         console.log(addedServices);
         getProducts();
         getServices();
         getSales();
+        getAdmins();
     }, []);
 
     useEffect(() => {
-        if (addedServices && addedServices.length > 0 && addedProducts && addedProducts.length > 0){
+        if (addedServices && addedServices.length > 0 && addedProducts && addedProducts.length > 0 && sales && sales.length > 0 && allAdmins && allAdmins.length > 0){
             setIsFormReady(true);
         }
-    }, [addedServices, addedProducts]);
+    }, [addedServices, addedProducts, sales, allAdmins]);
 
     useEffect(() => {
         let baseBillAmount = 0;
@@ -112,6 +140,8 @@ export default function ({token, logoutFn, showNotification}){
         }else {
             setTotalBillAmount(billAmt);
         }
+
+        setPaidAmount(billAmt);
     }, [baseBillAmount, discountAmount]);
 
     function clearForm() {
@@ -124,6 +154,7 @@ export default function ({token, logoutFn, showNotification}){
         setSelectedServices([]);
         setDiscountAmount(0);
         setPaidAmount(0);
+        setSaleDoneBy(null);
     }
 
     // useEffect(() => {
@@ -134,12 +165,15 @@ export default function ({token, logoutFn, showNotification}){
     // }, [formClear]);
 
     async function addSaleHandler(){
+        setloading(true);
         const response = await postRequest('/add-sale', {}, {token: token}, {
             firstName,
             lastName,
             email,
+            adminId: saleDoneBy,
             phone,
             dob,
+            address,
             services: selectedServices,
             products: selectedProducts,
             baseBillAmount,
@@ -159,8 +193,8 @@ export default function ({token, logoutFn, showNotification}){
             showNotification("error", "Add Sale: "+response.message);
         }
 
-        clearForm();
         getSales();
+        setloading(false);
     }
 
     return (
@@ -178,12 +212,14 @@ export default function ({token, logoutFn, showNotification}){
                                         <TableColHeader title={"Customer Name"} />
                                         <TableColHeader title={"Email"} />
                                         <TableColHeader title={"Phone"} />
+                                        <TableColHeader title={"Address"} />
                                         {/*<TableColHeader title={"Services"} />*/}
                                         {/*<TableColHeader title={"Products"} />*/}
                                         <TableColHeader title={"Bill Amount"} />
                                         <TableColHeader title={"Discount Amount"} />
                                         <TableColHeader title={"Paid Amount"} />
                                         <TableColHeader title={"Sale By"} />
+                                        <TableColHeader title={"More"} />
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -196,12 +232,21 @@ export default function ({token, logoutFn, showNotification}){
                                                     <TableDataCell data={item.name} />
                                                     <TableDataCell data={item.email} />
                                                     <TableDataCell data={item.phone} />
+                                                    <TableDataCell data={item.address || ""} />
                                                     {/*<TableDataCell data={item.services} />*/}
                                                     {/*<TableDataCell data={item.products} />*/}
                                                     <TableDataCell data={item.billAmount} />
                                                     <TableDataCell data={item.discountAmount} />
                                                     <TableDataCell data={item.paidAmount} />
                                                     <TableDataCell data={item.saleBy} />
+                                                    <TableDataCell data={
+                                                        <Link to={`?sale_id=${item._id}`}
+                                                              className='px-2 py-1 text-sm
+                                                              bg-green-400 text-white font-semibold rounded'
+                                                            reloadDocument>
+                                                            View
+                                                        </Link>
+                                                    } />
                                                 </tr>
                                             )
                                         })
@@ -230,6 +275,8 @@ export default function ({token, logoutFn, showNotification}){
                         <FormInput label={"Phone"} type={"text"} placeHolder={"Phone Number"}
                                    onChangeCallback={setPhone} />
 
+                        <FormInput label={"Address"} type={"text"} placeHolder={"Address"} onChangeCallback={setAddress} />
+
                         <FormInput label={"Date Of Birth"} type={"date"} placeHolder={"DOB"}
                                    onChangeCallback={setDob} />
 
@@ -239,15 +286,17 @@ export default function ({token, logoutFn, showNotification}){
                         <FormDynamicInput label={"Additional Products"} selectedList={selectedProducts}
                                           setSelectedList={setSelectedProducts} selectList={addedProducts} />
 
-                        <FormInput disabled={true} label={"Bill Amount"} type={"number"} placeHolder={totalBillAmount}
+                        <FormInput disabled={true} label={"Bill Amount"} type={"number"} placeHolder={baseBillAmount}
                                    onChangeCallback={() => {}} />
 
                         <FormInput label={"Discount Amount"} type={"number"} placeHolder={"Discount Amount"} onChangeCallback={setDiscountAmount} />
 
-                        <FormInput label={"Paid Amount"} type={"number"} placeHolder={"Paid Amount"} onChangeCallback={setPaidAmount} />
+                        <FormInput label={"Paid Amount"} type={"number"} placeHolder={"Paid Amount"} onChangeCallback={setPaidAmount} valueState={paidAmount} />
+
+                        <FormInput label={"Sale Done By"} type={"dropdown"} placeHolder={"Select Employee"} onChangeCallback={setAdminId} options={allAdmins.map(item => item.email)}/>
 
                         <div className='flex flex-col items-center justify-between mt-3 flex-wrap'>
-                            <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
+                            <button disabled={loading} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
                                 px-4 rounded focus:outline-none focus:shadow-outline' type="submit"
                                     onClick={() => {addSaleHandler();}}>{loading ? "Processing.." : "Submit"}</button>
 

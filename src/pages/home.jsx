@@ -1,6 +1,10 @@
 import React, {useState} from "react";
 import Header from "../components/Header.jsx";
 import HomeStats from "../components/HomeStats.jsx";
+import DashIcon from "../assets/dashboard.png";
+import DashIconWhite from "../assets/dashboardWhite.png";
+import LeftVerticalNavBar from "../components/LeftVerticalNavBar.jsx";
+import Camera from "../components/Camera.jsx";
 
 export default function Home ({logoutFn, token, admin, notifications, showNotification}){
 
@@ -9,8 +13,19 @@ export default function Home ({logoutFn, token, admin, notifications, showNotifi
         { name: "Products", link: "/products"},
         { name: "Employees", link: "/employees"},
         { name: "My Profile", link: "/profile"},
-        { name: "Sales", link: "/sales"}
+        { name: "Sales", link: "/sales"},
+        { name: "Attendances", link: '/attendances'}
     ];
+
+    const [activeNavTab, setActiveNavTab] = useState("Dashboard");
+
+    const navItems = [
+        {
+            text: "Dashboard",
+            icon: DashIcon,
+            iconWhite: DashIconWhite
+        }
+    ]
 
     return (
         <div className=''>
@@ -22,8 +37,10 @@ export default function Home ({logoutFn, token, admin, notifications, showNotifi
                 </div>
             }
 
-
-            <HomeStats logoutFn={logoutFn} token={token} showNotification={showNotification} />
+            <div className='flex'>
+                {/*<LeftVerticalNavBar active={activeNavTab} setActive={setActiveNavTab} navItems={navItems} />*/}
+                <HomeStats logoutFn={logoutFn} token={token} showNotification={showNotification} />
+            </div>
 
 
         </div>
