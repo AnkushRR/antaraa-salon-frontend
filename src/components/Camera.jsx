@@ -29,11 +29,11 @@ const Camera = ({ token, showNotification, logoutFn }) => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0);
                 const text = response.data.attendance.selfieDateStr;
-                const textSize = 20; // You can adjust this as needed
+                const textSize = 30; // You can adjust this as needed
                 ctx.font = textSize+"px Arial";
                 const textWidth = ctx.measureText(text).width;
-                const x = canvas.width - textWidth - 5; // position text 5px from the right edge
-                const y = textSize + 5; // position text 5px down from the top edge
+                const x = 5; // position text 5px from the right edge
+                const y = 30; // position text 5px down from the top edge
                 ctx.fillStyle = 'white';
                 ctx.fillText(text, x, y);
             };
@@ -84,7 +84,8 @@ const Camera = ({ token, showNotification, logoutFn }) => {
             setIsSelfieUploaded(true);
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
-                videoRef.current.srcObject = null; // Add this line to fix the issue.
+                videoRef.current.srcObject = null;
+                videoRef.current.load();
             }
         }
         else if (resp.status === 401){
@@ -99,7 +100,7 @@ const Camera = ({ token, showNotification, logoutFn }) => {
             {
                 !isSelfieUploaded &&
                 <>
-                    <video ref={videoRef} autoPlay muted></video>
+                    <video ref={videoRef} autoPlay playsInline muted></video>
 
                     <button className='bg-green-500 text-white font-semibold text-sm py-2 rounded'
                             onClick={takePicture}>Take picture
