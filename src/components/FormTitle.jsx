@@ -8,18 +8,26 @@ export default function FormTitle({text, navLinks}){
                 <div className='text-xl font-semibold text-slate-600 font-serif text-left '>
                     {text}
                 </div>
-                {
-                    navLinks &&
+                <div className='flex space-x-2'>
+                    {
+                        navLinks &&
                         navLinks.map( item => {
                             if (!item.title || !item.path)
                                 return
 
+                            let target = '_self';
+                            if (item.target) {
+                                target = item.target;
+                            }
+
                             return (
                                 <Link className='px-2 py-1 text-sm
-                                bg-sky-950 mb-1 text-white font-semibold rounded' to={item.path} reloadDocument>{item.title}</Link>
+                                bg-sky-950 mb-1 text-white font-semibold rounded' to={item.path} target={target} reloadDocument>{item.title}</Link>
                             )
                         })
-                }
+                    }
+                </div>
+
             </div>
             <hr />
         </div>

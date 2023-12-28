@@ -127,7 +127,11 @@ export default function ({sale_id, token, showNotification, logoutFn}){
     }, [selectedSale]);
 
     return (
-        <CenterMainCard title={"View Sale"} titleNavLinks={[{title: "All Sales", path: "/sales"}]} children={
+        <CenterMainCard title={"View Sale"} titleNavLinks={[{title: "All Sales", path: "/sales"}, {
+            title: "Download Invoice",
+            path: selectedSale?.invoiceLink,
+            target: '_blank'
+        }]} children={
             < >
                 { selectedSale ?
                     <div className='flex flex-row space-x-2 p-2'>

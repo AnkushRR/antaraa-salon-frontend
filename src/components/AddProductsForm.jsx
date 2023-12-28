@@ -156,6 +156,8 @@ export default function (props){
                                         id={item._id}
                                         showNotification={props.showNotification}
                                         key1="stock"
+                                        editable={true}
+                                        type={"number"}
                                         data={item.stock || 1} />
                                     <TableDataCell
                                         refreshFn={getProducts}
