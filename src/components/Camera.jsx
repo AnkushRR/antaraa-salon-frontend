@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { handleImageUpload } from "../services/imageCompression.js";
 import {getRequest} from "../utils/apiHandler.js";
+import FormSubmit from "./FormSubmit.jsx";
 
-const Camera = ({ token, showNotification, logoutFn }) => {
+const Camera = ({ type, token, showNotification, logoutFn }) => {
 
     const videoRef = useRef();
     const canvasRef = useRef();
@@ -14,31 +15,48 @@ const Camera = ({ token, showNotification, logoutFn }) => {
             token: token
         });
 
-        if (response.status === 200){
-            showNotification("success", "Attendance fetched successfully");
-            setIsSelfieUploaded(true);
+        if (response.status === 200 && response.data.attendance){
+            let attendance = response.data.attendance.filter(item => {
+                console.log(item.type, type);
+                return item.type === type
+            })
+            if (attendance.length > 0){
+                attendance = attendance[0];
+                showNotification("success", "Attendance fetched successfully");
+                setIsSelfieUploaded(true);
 
-            const canvas = canvasRef.current;
-            canvas.width = 600;
-            canvas.height = 500;
+                const canvas = canvasRef.current;
+                canvas.width = 600;
+                canvas.height = 500;
 
-            // Drawing image from URL
-            const img = new Image();
-            img.onload = () => {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0);
-                const text = response.data.attendance.selfieDateStr;
-                const textSize = 30; // You can adjust this as needed
-                ctx.font = textSize+"px Arial";
-                const textWidth = ctx.measureText(text).width;
-                const x = 5; // position text 5px from the right edge
-                const y = 30; // position text 5px down from the top edge
-                ctx.fillStyle = 'white';
-                ctx.fillText(text, x, y);
-            };
-            img.src = response.data.attendance.selfieUrl;
+                // Drawing image from URL
+                const img = new Image();
+                img.onload = () => {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    const text = attendance.selfieDateStr;
+                    const textSize = 30; // You can adjust this as needed
+                    ctx.font = textSize+"px Arial";
+                    const textWidth = ctx.measureText(text).width;
+                    const x = 5; // position text 5px from the right edge
+                    const y = 30; // position text 5px down from the top edge
+                    ctx.fillStyle = 'white';
+                    ctx.fillText(text, x, y);
+                };
+                img.src = attendance.selfieUrl;
+            } else {
+                setIsSelfieUploaded(false);
 
+                if (navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then((mediaStream) => {
+                            videoRef.current.srcObject = mediaStream;
+                            setStream(mediaStream);
+                        })
+                        .catch((err) => console.log("Something went wrong!", err));
+                }
+            }
         }else {
             setIsSelfieUploaded(false);
 
@@ -78,7 +96,7 @@ const Camera = ({ token, showNotification, logoutFn }) => {
             ia[i] = byteString.charCodeAt(i);
         }
         const imageBlob = new Blob([ab], { type: mimeString });
-        const resp = await handleImageUpload(imageBlob, token);
+        const resp = await handleImageUpload(imageBlob, token, type);
         if (resp.status === 200){
             showNotification("success", "Upload Selfie: "+resp.message);
             setIsSelfieUploaded(true);
@@ -97,9 +115,11 @@ const Camera = ({ token, showNotification, logoutFn }) => {
 
     return (
         <div className='max-w-sm flex flex-col space-y-2'>
+            <h5>{type} selfie:</h5>
             {
                 !isSelfieUploaded &&
                 <>
+
                     <video ref={videoRef} autoPlay playsInline muted></video>
 
                     <button className='bg-green-500 text-white font-semibold text-sm py-2 rounded'
@@ -107,9 +127,7 @@ const Camera = ({ token, showNotification, logoutFn }) => {
                     </button>
                 </>
             }
-
-
-            <canvas className='w-full' ref={canvasRef}></canvas>
+            <canvas hidden={!isSelfieUploaded} className='w-full' ref={canvasRef}></canvas>
         </div>
     );
 }
