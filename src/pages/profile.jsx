@@ -43,8 +43,9 @@ export default function ({token, logoutFn, notifications, showNotification}) {
             <Header currentPageTitle="My Profile" logoutFn={logoutFn} otherLinks={navLinks} notifications={notifications} />
 
             <CenterMainCard title={"Attendance"} children={
-                <div className='mx-0'>
-                    <Camera token={token} logoutFn={logoutFn} showNotification={showNotification} />
+                <div className='mx-0 flex flex-row space-x-2 flex-wrap'>
+                    <Camera type={"punch-in"} token={token} logoutFn={logoutFn} showNotification={showNotification} />
+                    <Camera type={"punch-out"} token={token} logoutFn={logoutFn} showNotification={showNotification} />
                 </div>
             } />
 
