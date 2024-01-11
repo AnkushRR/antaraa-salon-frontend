@@ -9,6 +9,7 @@ import FormCard from "./FormCard.jsx";
 import FormDynamicInput from "./FormDynamicInput.jsx";
 import products from "../pages/products.jsx";
 import {Link} from "react-router-dom";
+import DateRangePicker from "./DateRangePicker.jsx";
 
 export default function ({token, logoutFn, showNotification}){
 
@@ -16,6 +17,7 @@ export default function ({token, logoutFn, showNotification}){
     const [addedProducts, setAddedProducts] = useState([]);
     const [addedServices, setAddedServices] = useState([]);
     const [saleDoneBy, setSaleDoneBy] = useState(null);
+    const [saleDoneByIds, setSaleDoneByIds] = useState([]);
     const [allAdmins, setAllAdmins] = useState([]);
 
     const [firstName, setFirstName] = useState("");
@@ -31,10 +33,16 @@ export default function ({token, logoutFn, showNotification}){
     const [isFormReady, setIsFormReady] = useState(false);
     const [discountAmount, setDiscountAmount] = useState(0);
     const [paidAmount, setPaidAmount] = useState(0);
+    const [paymentMode, setPaymentMode] = useState(null);
     const [formClear, setFormClear] = useState(false);
+    const dateNow = new Date();
+    const [startDate, setStartDate] = useState(new Date(dateNow.getFullYear(), dateNow.getMonth() - 5, dateNow.getDate(), 23, 59, 59));
+    const [endDate, setEndDate] = useState(dateNow);
 
     const [loading, setloading] = useState(false);
     const [loginErr, setloginErr] = useState("");
+
+    const PAYMENT_MODES = ["UPI", "Cash", "Card"];
 
     async function getProducts() {
         console.log(token);
@@ -80,6 +88,20 @@ export default function ({token, logoutFn, showNotification}){
         }
     }
 
+    async function getSalesDateRange() {
+        const response = await getRequest(`get-sales?startDate=${startDate}&endDate=${endDate}`, {}, {
+            token: `${token}`
+        });
+
+        if (response.status === 200){
+            setSales(response.data.sales);
+        }else if (response.status === 401){
+            logoutFn();
+        }else {
+            showNotification("error", "fetch Sales: "+response.message);
+        }
+    }
+
     async function getAdmins() {
         const response = await getRequest('get-admins', {}, {
             token: `${token}`
@@ -96,11 +118,14 @@ export default function ({token, logoutFn, showNotification}){
 
     async function setAdminId(adminEmail){
         console.log(adminEmail);
-        const a = allAdmins.find(item => item.email === adminEmail);
-        if (a){
-            setSaleDoneBy(a._id);
-            console.log("admin id", a._id);
-        }
+        setSaleDoneByIds([...saleDoneByIds, adminEmail]);
+    }
+
+    async function removeAdminIdFromList(adminEmail) {
+        setSaleDoneByIds(prevState => {
+            return prevState.filter(item => item !== adminEmail);
+        });
+
     }
 
     useEffect(() => {
@@ -144,6 +169,10 @@ export default function ({token, logoutFn, showNotification}){
         setPaidAmount(billAmt);
     }, [baseBillAmount, discountAmount]);
 
+    useEffect(() => {
+
+    }, [saleDoneByIds]);
+
     function clearForm() {
         setFirstName("");
         setLastName("");
@@ -154,7 +183,9 @@ export default function ({token, logoutFn, showNotification}){
         setSelectedServices([]);
         setDiscountAmount(0);
         setPaidAmount(0);
+        setPaymentMode(null);
         setSaleDoneBy(null);
+        setSaleDoneByIds([]);
     }
 
     // useEffect(() => {
@@ -166,11 +197,12 @@ export default function ({token, logoutFn, showNotification}){
 
     async function addSaleHandler(){
         setloading(true);
+        console.log("adminIds", saleDoneByIds);
         const response = await postRequest('/add-sale', {}, {token: token}, {
             firstName,
             lastName,
             email,
-            adminId: saleDoneBy,
+            adminIds: saleDoneByIds,
             phone,
             dob,
             address,
@@ -178,7 +210,8 @@ export default function ({token, logoutFn, showNotification}){
             products: selectedProducts,
             baseBillAmount,
             discountAmount,
-            paidAmount
+            paidAmount,
+            paymentMode
         });
 
         console.log("Add Sale form response", response);
@@ -199,65 +232,6 @@ export default function ({token, logoutFn, showNotification}){
 
     return (
             <div className='flex flex-wrap w-screen justify-center'>
-                {sales.length > 0 &&
-                    <MaxWTableCard children={
-                        <div className=''>
-                            <FormTitle text='Sales:'/>
-                            <div className='overflow-x-scroll'>
-                                <table className='border text-center overflow-x-scroll'>
-                                    <thead>
-                                    <tr className='table-row'>
-                                        <TableColHeader title={"Id"} />
-                                        <TableColHeader title={"Date"} />
-                                        <TableColHeader title={"Customer Name"} />
-                                        <TableColHeader title={"Email"} />
-                                        <TableColHeader title={"Phone"} />
-                                        <TableColHeader title={"Address"} />
-                                        {/*<TableColHeader title={"Services"} />*/}
-                                        {/*<TableColHeader title={"Products"} />*/}
-                                        <TableColHeader title={"Bill Amount"} />
-                                        <TableColHeader title={"Discount Amount"} />
-                                        <TableColHeader title={"Paid Amount"} />
-                                        <TableColHeader title={"Sale By"} />
-                                        <TableColHeader title={"More"} />
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {
-                                        sales && sales.map(item => {
-                                            return (
-                                                <tr key={item._id} className='table-row'>
-                                                    <TableDataCell data={item.id} />
-                                                    <TableDataCell data={new Date(item.createdAt).toLocaleDateString()} />
-                                                    <TableDataCell data={item.name} />
-                                                    <TableDataCell data={item.email} />
-                                                    <TableDataCell data={item.phone} />
-                                                    <TableDataCell data={item.address || ""} />
-                                                    {/*<TableDataCell data={item.services} />*/}
-                                                    {/*<TableDataCell data={item.products} />*/}
-                                                    <TableDataCell data={item.billAmount} />
-                                                    <TableDataCell data={item.discountAmount} />
-                                                    <TableDataCell data={item.paidAmount} />
-                                                    <TableDataCell data={item.saleBy} />
-                                                    <TableDataCell data={
-                                                        <Link to={`?sale_id=${item._id}`}
-                                                              className='px-2 py-1 text-sm
-                                                              bg-green-400 text-white font-semibold rounded'
-                                                            reloadDocument>
-                                                            View
-                                                        </Link>
-                                                    } />
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    } />
-                }
 
                 <FormCard child={
                     <div className=''>
@@ -289,11 +263,14 @@ export default function ({token, logoutFn, showNotification}){
                         <FormInput disabled={true} label={"Bill Amount"} type={"number"} placeHolder={baseBillAmount}
                                    onChangeCallback={() => {}} />
 
+
                         <FormInput label={"Discount Amount"} type={"number"} placeHolder={"Discount Amount"} onChangeCallback={setDiscountAmount} />
 
                         <FormInput label={"Paid Amount"} type={"number"} placeHolder={"Paid Amount"} onChangeCallback={setPaidAmount} valueState={paidAmount} />
 
-                        <FormInput label={"Sale Done By"} type={"dropdown"} placeHolder={"Select Employee"} onChangeCallback={setAdminId} options={allAdmins.map(item => item.email)}/>
+                        <FormInput label={"Payment Mode"} type={"dropdown"} placeHolder={"Payment Mode"} onChangeCallback={setPaymentMode} valueState={paymentMode} options={PAYMENT_MODES} />
+
+                        <FormInput label={"Sale Done By"} type={"dropdown-multiselect"} placeHolder={"Select Employee"} onChangeCallback={setAdminId} valueState={saleDoneByIds} removeCallback={removeAdminIdFromList} options={allAdmins.map(item => item.email)}/>
 
                         <div className='flex flex-col items-center justify-between mt-3 flex-wrap'>
                             <button disabled={loading} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
@@ -305,6 +282,77 @@ export default function ({token, logoutFn, showNotification}){
                         </div>
                     </div>
                 } />
+
+                <MaxWTableCard children={
+                    <div className=''>
+                        <FormTitle text='Sales:'/>
+                        <DateRangePicker
+                            startDate={startDate}
+                            endDate={endDate}
+                            setEndDate={setEndDate}
+                            setStartDate={setStartDate}
+                            submitCallBack={getSalesDateRange}
+                        />
+                        {sales.length > 0 &&
+                        <div className='overflow-x-scroll'>
+                            <table className='border text-center overflow-x-scroll'>
+                                <thead>
+                                <tr className='table-row'>
+                                    <TableColHeader title={"Id"} />
+                                    <TableColHeader title={"Date"} />
+                                    <TableColHeader title={"Customer Name"} />
+                                    <TableColHeader title={"Email"} />
+                                    <TableColHeader title={"Phone"} />
+                                    <TableColHeader title={"Address"} />
+                                    {/*<TableColHeader title={"Services"} />*/}
+                                    {/*<TableColHeader title={"Products"} />*/}
+                                    <TableColHeader title={"Bill Amount"} />
+                                    <TableColHeader title={"Discount Amount"} />
+                                    <TableColHeader title={"Paid Amount"} />
+                                    <TableColHeader title={"Payment Mode"} />
+                                    <TableColHeader title={"More"} />
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    sales && sales.map(item => {
+                                        return (
+                                            <tr key={item._id} className='table-row'>
+                                                <TableDataCell data={item.id} />
+                                                <TableDataCell data={new Date(item.createdAt).toLocaleDateString()} />
+                                                <TableDataCell data={item.name} />
+                                                <TableDataCell data={item.email} />
+                                                <TableDataCell data={item.phone} />
+                                                <TableDataCell data={item.address || ""} />
+                                                {/*<TableDataCell data={item.services} />*/}
+                                                {/*<TableDataCell data={item.products} />*/}
+                                                <TableDataCell data={item.billAmount} />
+                                                <TableDataCell data={item.discountAmount} />
+                                                <TableDataCell data={item.paidAmount} />
+                                                <TableDataCell data={item.paymentMode} />
+                                                <TableDataCell data={
+                                                    <Link to={`?sale_id=${item._id}`}
+                                                          className='px-2 py-1 text-sm
+                                                          bg-green-400 text-white font-semibold rounded'
+                                                          reloadDocument>
+                                                        View
+                                                    </Link>
+                                                } />
+                                            </tr>
+                                        )
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                        }
+                        {
+                            sales.length === 0 &&
+                            <p>No sale records found..</p>
+                        }
+                    </div>
+                } />
+
             </div>
     )
 }

@@ -88,140 +88,7 @@ export default function (props){
 
     return (
         <div className='flex flex-wrap w-screen justify-center'>
-            {addedProducts.length > 0 &&
-            <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
-                <FormTitle text='Added Products:'/>
-                <EditToolTip />
-                <div className='overflow-x-scroll'>
-                    <table className='border text-center'>
-                    <thead>
-                        <tr className='table-row'>
-                            <TableColHeader title={"Category"} />
-                            <TableColHeader title={"Name"} />
-                            <TableColHeader title={"Description"} />
-                            <TableColHeader title={"Is For Sale"} />
-                            <TableColHeader title={"Stock"} />
-                            <TableColHeader title={"Unit Cost"} />
-                            <TableColHeader title={"Selling Price"} />
-                            <TableColHeader title={"Service Sale Count"} />
-                            <TableColHeader title={"Direct Sale Count"} />
-                            <TableColHeader title={"Rating"} />
-                            <TableColHeader title={"DEL"} />
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        addedProducts && addedProducts.map(item => {
-                            return (
-                                <tr key={item._id} className='table-row'>
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={'product'}
-                                        editable={true}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="code"
-                                        data={item.code} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="name"
-                                        data={item.name}
-                                        editable={true} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1={"description"}
-                                        editable={true}
-                                        data={item.description} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="isForSale"
-                                        data={item.isForSale ? "Yes" : "No"} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="stock"
-                                        editable={true}
-                                        type={"number"}
-                                        data={item.stock || 1} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        editable={true}
-                                        type={"number"}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="unitCost"
-                                        data={item.unitCost} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        editable={true}
-                                        type={"number"}
-                                        collection={'product'}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="sellingPrice"
-                                        data={item.sellingPrice} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={"product"}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="serviceSaleCount"
-                                        data={item.serviceSaleCount} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={"product"}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="directSaleCount"
-                                        data={item.directSaleCount} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={"product"}
-                                        id={item._id}
-                                        showNotification={props.showNotification}
-                                        key1="rating"
-                                        data={item.rating} />
-                                    <TableDataCell
-                                        refreshFn={getProducts}
-                                        token={props.token}
-                                        collection={"product"}
-                                        id={item._id}
-                                        action={"delete"}
-                                        showNotification={props.showNotification}
-                                        data={
-                                        <img className={'w-10'} src={removeImg} alt={"delete"} />
-                                        } />
-                                </tr>
-                            )
-                        })
-                    }
-                    </tbody>
-                </table>
-                </div>
-            </div>
-            }
+
             <div className='bg-white shadow-lg rounded px-8 pt-6 pb-1 mb-4 mt-5 sm:max-w-md max-w-sm'>
                 <FormTitle text='Add A Product:'/>
                 <FormInput label={"Product Category"} type={"text"} placeHolder={"Category"} onChangeCallback={setCode} />
@@ -246,6 +113,130 @@ export default function (props){
                         {loginErr}</small><br></br>
                 </div>
             </div>
+
+            {addedProducts.length > 0 &&
+                <div className='bg-white shadow-lg mx-1 rounded px-8 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
+                    <FormTitle text='Added Products:'/>
+                    <EditToolTip />
+                    <div className='overflow-x-scroll'>
+                        <table className='border text-center'>
+                            <thead>
+                            <tr className='table-row'>
+                                <TableColHeader title={"Category"} />
+                                <TableColHeader title={"Name"} />
+                                <TableColHeader title={"Description"} />
+                                <TableColHeader title={"Is For Sale"} />
+                                <TableColHeader title={"Stock"} />
+                                <TableColHeader title={"Selling Price"} />
+                                <TableColHeader title={"Service Sale Count"} />
+                                <TableColHeader title={"Direct Sale Count"} />
+                                <TableColHeader title={"Rating"} />
+                                <TableColHeader title={"DEL"} />
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                addedProducts && addedProducts.map(item => {
+                                    return (
+                                        <tr key={item._id} className='table-row'>
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={'product'}
+                                                editable={true}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="code"
+                                                data={item.code} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={'product'}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="name"
+                                                data={item.name}
+                                                editable={true} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={'product'}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1={"description"}
+                                                editable={true}
+                                                data={item.description} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={'product'}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="isForSale"
+                                                data={item.isForSale ? "Yes" : "No"} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={'product'}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="stock"
+                                                editable={true}
+                                                type={"number"}
+                                                data={item.stock || 1} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                editable={true}
+                                                type={"number"}
+                                                collection={'product'}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="sellingPrice"
+                                                data={item.sellingPrice} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={"product"}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="serviceSaleCount"
+                                                data={item.serviceSaleCount} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={"product"}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="directSaleCount"
+                                                data={item.directSaleCount} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={"product"}
+                                                id={item._id}
+                                                showNotification={props.showNotification}
+                                                key1="rating"
+                                                data={item.rating} />
+                                            <TableDataCell
+                                                refreshFn={getProducts}
+                                                token={props.token}
+                                                collection={"product"}
+                                                id={item._id}
+                                                action={"delete"}
+                                                showNotification={props.showNotification}
+                                                data={
+                                                    <img className={'w-10'} src={removeImg} alt={"delete"} />
+                                                } />
+                                        </tr>
+                                    )
+                                })
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
 
     );

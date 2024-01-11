@@ -71,6 +71,35 @@ export default function ({token, logoutFn, showNotification}){
 
     return (
             <div className='flex flex-wrap w-screen justify-center'>
+                <FormCard child={
+                    <div className=''>
+                        <FormTitle text='Add Employee:'/>
+
+                        <FormInput label={"First Name"} type={"text"} placeHolder={"First Name"} onChangeCallback={setFirstName} />
+
+                        <FormInput label={"Last Name"} type={"text"} placeHolder={"Last Name"} onChangeCallback={setLastName} />
+
+                        <FormInput label={"Email"} type={"text"} placeHolder={"Email"} onChangeCallback={setEmail} />
+
+                        <FormInput label={"Phone"} type={"text"} placeHolder={"Phone Number"} onChangeCallback={setPhone} />
+
+                        <FormInput label={"Department"} type={"text"} placeHolder={"Department"} onChangeCallback={setDepartment} />
+
+                        <FormInput label={"Role"} type={"dropdown"} placeHolder={"Admin Role"} onChangeCallback={setRole} options={["manager", "staff"]} />
+
+                        <FormInput label={"Password"} type={"text"} placeHolder={"Password"} onChangeCallback={setPassword} />
+
+                        <div className='flex flex-col items-center justify-between mt-3 flex-wrap'>
+                            <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
+                                px-4 rounded focus:outline-none focus:shadow-outline' type="submit"
+                                    onClick={() => {addEmployeeHandler();}}>{loading ? "Processing.." : "Submit"}</button>
+
+                            <small className='inline-block align-baseline font-bold text-sm text-red-500 mt-1'>
+                                {loginErr}</small><br></br>
+                        </div>
+                    </div>
+                } />
+
                 {employees.length > 0 &&
                     <MaxWTableCard children={
                         <div className=''>
@@ -115,35 +144,6 @@ export default function ({token, logoutFn, showNotification}){
                         </div>
                     } />
                 }
-
-                <FormCard child={
-                    <div className=''>
-                        <FormTitle text='Add Employee:'/>
-
-                        <FormInput label={"First Name"} type={"text"} placeHolder={"First Name"} onChangeCallback={setFirstName} />
-
-                        <FormInput label={"Last Name"} type={"text"} placeHolder={"Last Name"} onChangeCallback={setLastName} />
-
-                        <FormInput label={"Email"} type={"text"} placeHolder={"Email"} onChangeCallback={setEmail} />
-
-                        <FormInput label={"Phone"} type={"text"} placeHolder={"Phone Number"} onChangeCallback={setPhone} />
-
-                        <FormInput label={"Department"} type={"text"} placeHolder={"Department"} onChangeCallback={setDepartment} />
-
-                        <FormInput label={"Role"} type={"dropdown"} placeHolder={"Admin Role"} onChangeCallback={setRole} options={["manager", "staff"]} />
-
-                        <FormInput label={"Password"} type={"text"} placeHolder={"Password"} onChangeCallback={setPassword} />
-
-                        <div className='flex flex-col items-center justify-between mt-3 flex-wrap'>
-                            <button disabled={loading?true:""} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2
-                                px-4 rounded focus:outline-none focus:shadow-outline' type="submit"
-                                    onClick={() => {addEmployeeHandler();}}>{loading ? "Processing.." : "Submit"}</button>
-
-                            <small className='inline-block align-baseline font-bold text-sm text-red-500 mt-1'>
-                                {loginErr}</small><br></br>
-                        </div>
-                    </div>
-                } />
             </div>
     )
 }

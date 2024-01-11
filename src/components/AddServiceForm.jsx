@@ -104,103 +104,7 @@ export default function AddServiceForm(props){
 
     return (
         <div className='flex flex-wrap w-screen justify-center'>
-            {addedServices.length > 0 &&
-            <div className='bg-white shadow-lg mx-1 rounded px-4 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
-                <FormTitle text='Added Services:'/>
-                <EditToolTip />
-                <div className='overflow-x-scroll'>
-                    <table className='border text-center'>
-                        <thead>
-                            <tr className='table-row'>
-                                <TableColHeader title={"Category"} />
-                                <TableColHeader title={"Name"} />
-                                <TableColHeader title={"Description"} />
-                                <TableColHeader title={"Unit Cost"} />
-                                <TableColHeader title={"Selling Price"} />
-                                <TableColHeader title={"Service Time"} />
-                                <TableColHeader title={"Sale Count"} />
-                                <TableColHeader title={"Last Sale At"} />
-                                <TableColHeader title={"Last Sale By"} />
-                                <TableColHeader title={"Rating"} />
-                                <TableColHeader title={"DEL"} />
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            addedServices && addedServices.map(item => {
-                                return (
-                                    <tr key={item._id} className='table-row'>
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={'service'}
-                                            id={item._id}
-                                            key1={'code'}
-                                            showNotification={props.showNotification}
-                                            editable={true}
-                                            data={item.code} />
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={'service'}
-                                            id={item._id}
-                                            key1={'name'}
-                                            showNotification={props.showNotification}
-                                            editable={true}
-                                            data={item.name} />
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={'service'}
-                                            id={item._id}
-                                            key1={'description'}
-                                            showNotification={props.showNotification}
-                                            editable={true}
-                                            data={item.description} />
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={'service'}
-                                            id={item._id}
-                                            key1={'unitCost'}
-                                            type={'number'}
-                                            showNotification={props.showNotification}
-                                            editable={true}
-                                            data={item.unitCost} />
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={'service'}
-                                            id={item._id}
-                                            key1={'sellingPr'}
-                                            type={'number'}
-                                            showNotification={props.showNotification}
-                                            editable={true}
-                                            data={item.sellingPrice} />
-                                        <TableDataCell data={item.serviceTime} />
-                                        <TableDataCell data={item.saleCount} />
-                                        <TableDataCell data={utcToIST(item.lastSaleAt)} />
-                                        <TableDataCell data={allAdmins?.find(item => item._id)?.email || "null"} />
-                                        <TableDataCell data={item.rating || 0} />
-                                        <TableDataCell
-                                            refreshFn={getServices}
-                                            token={props.token}
-                                            collection={"service"}
-                                            id={item._id}
-                                            action={"delete"}
-                                            showNotification={props.showNotification}
-                                            data={
-                                                <img className={'w-10'} src={removeImg} alt={"delete"} />
-                                            } />
-                                    </tr>
-                                )
-                            })
-                        }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            }
+
             <div className='bg-white shadow-lg rounded px-8 pt-6 pb-1 mb-4 mt-5 sm:max-w-md max-w-sm'>
                 <FormTitle text='Add A Service:'/>
                 <FormInput label="Category" type="text" placeHolder="Service Category" onChangeCallback={setCode} />
@@ -224,6 +128,91 @@ export default function AddServiceForm(props){
                         {loginErr}</small><br></br>
                 </div>
             </div>
+
+            {addedServices.length > 0 &&
+                <div className='bg-white shadow-lg mx-1 rounded px-4 pt-6 pb-5 mb-4 mt-5 w-full sm:w-4/6'>
+                    <FormTitle text='Added Services:'/>
+                    <EditToolTip />
+                    <div className='overflow-x-scroll'>
+                        <table className='border text-center'>
+                            <thead>
+                            <tr className='table-row'>
+                                <TableColHeader title={"Category"} />
+                                <TableColHeader title={"Name"} />
+                                <TableColHeader title={"Description"} />
+                                <TableColHeader title={"Selling Price"} />
+                                <TableColHeader title={"Service Time"} />
+                                <TableColHeader title={"Sale Count"} />
+                                <TableColHeader title={"Last Sale At"} />
+                                <TableColHeader title={"Rating"} />
+                                <TableColHeader title={"DEL"} />
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                addedServices && addedServices.map(item => {
+                                    return (
+                                        <tr key={item._id} className='table-row'>
+                                            <TableDataCell
+                                                refreshFn={getServices}
+                                                token={props.token}
+                                                collection={'service'}
+                                                id={item._id}
+                                                key1={'code'}
+                                                showNotification={props.showNotification}
+                                                editable={true}
+                                                data={item.code} />
+                                            <TableDataCell
+                                                refreshFn={getServices}
+                                                token={props.token}
+                                                collection={'service'}
+                                                id={item._id}
+                                                key1={'name'}
+                                                showNotification={props.showNotification}
+                                                editable={true}
+                                                data={item.name} />
+                                            <TableDataCell
+                                                refreshFn={getServices}
+                                                token={props.token}
+                                                collection={'service'}
+                                                id={item._id}
+                                                key1={'description'}
+                                                showNotification={props.showNotification}
+                                                editable={true}
+                                                data={item.description} />
+                                            <TableDataCell
+                                                refreshFn={getServices}
+                                                token={props.token}
+                                                collection={'service'}
+                                                id={item._id}
+                                                key1={'sellingPrice'}
+                                                type={'number'}
+                                                showNotification={props.showNotification}
+                                                editable={true}
+                                                data={item.sellingPrice} />
+                                            <TableDataCell data={item.serviceTime} />
+                                            <TableDataCell data={item.saleCount} />
+                                            <TableDataCell data={utcToIST(item.lastSaleAt)} />
+                                            <TableDataCell data={item.rating || 0} />
+                                            <TableDataCell
+                                                refreshFn={getServices}
+                                                token={props.token}
+                                                collection={"service"}
+                                                id={item._id}
+                                                action={"delete"}
+                                                showNotification={props.showNotification}
+                                                data={
+                                                    <img className={'w-10'} src={removeImg} alt={"delete"} />
+                                                } />
+                                        </tr>
+                                    )
+                                })
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
 
     );
