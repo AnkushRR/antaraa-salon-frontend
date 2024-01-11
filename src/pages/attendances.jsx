@@ -95,7 +95,8 @@ export default function ({token, logoutFn, notifications, showNotification}) {
             {admin && admin.userName &&
                 <CenterMainCard title={"Attendance Dashboard"} children={
                     <div className='w-full'>
-                        <form onSubmit={handleFormSubmit} className='mb-2'>
+                        <div className="w-fit">
+                            <form onSubmit={handleFormSubmit} className='mb-2'>
                             <div className='flex justify-between'>
                                 <select className='rounded border px-3 py-2 mr-2'
                                 onChange={e => setSelectedAdmin(e.target.value)}
@@ -117,9 +118,10 @@ export default function ({token, logoutFn, notifications, showNotification}) {
                                     onChange={e => setToDate(e.target.value)}
                                     className='rounded border px-3 py-2'
                                 />
-                                <button type="submit" className='rounded border px-3 py-2 ml-2'>Submit</button>
+                                <button type="submit" className='rounded border px-3 py-2 ml-2 hover:border-green-400 hover:bg-green-400 hover:text-white'>Submit</button>
                             </div>
                         </form>
+                        </div>
 
                         <div className='flex flex-wrap'>
                             { attendances && attendances.length > 0 &&
